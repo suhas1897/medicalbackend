@@ -21,8 +21,6 @@ const fs = require("fs");
 const app = express();
 const mongoUrl = "mongodb+srv://npallapo:gC580rwLVY55JlWR@cluster0.gumrtg8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const port = process.env.PORT || 5001;
-const EMAIL_USER = npallapo@gitam.in;
-const EMAIL_PASS = tjvpjqqkhyoyacvi;
 
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -66,8 +64,8 @@ const transporter = nodemailer.createTransport({
   // port: 587,
   // secure: false, // true for 465, false for other ports
   auth: {
-      user: EMAIL_USER,
-      pass: EMAIL_PASS,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
   },
 });
 // Verify transporter
@@ -143,7 +141,7 @@ app.post("/register", async (req, res) => {
     let imageFilename = null;
     if (image) {
       // Create a unique filename
-      imageFilename = Date.now() + "-profile.jpeg";
+      imageFilename = Date.now() + "-profile.jpg";
       // Decode the base64 string into a buffer
       const imageBuffer = Buffer.from(image, "base64");
       // Define the uploads folder (make sure it exists)
@@ -181,7 +179,7 @@ app.post("/register", async (req, res) => {
 
     // Send OTP email
     const mailOptions = {
-      from: EMAIL_USER,
+      from: process.env.EMAIL_USER,
       to: email,
       subject: "Verify Your Account",
       text: `Your OTP code is ${otp}. It expires in 10 minutes.`,
@@ -504,7 +502,7 @@ app.post('/forgot-password', async (req, res) => {
     await user.save();
 
     const mailOptions = {
-      from: EMAIL_USER,
+      from: process.env.EMAIL_USER,
       to: email,
       subject: 'Password Reset OTP',
       text: `Your OTP for password reset is: ${otp}. It expires in 15 minutes.`,
@@ -854,7 +852,7 @@ app.patch("/appointment/:appointmentId", async (req, res) => {
   }
 });
 
-// Route: Get Doctor’s Appointments (GET)
+// Route: Get Doctorâ€™s Appointments (GET)
 app.get("/appointment/doctor/:doctorId", async (req, res) => {
   try {
     const { doctorId } = req.params;
